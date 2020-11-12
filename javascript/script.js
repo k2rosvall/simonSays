@@ -8,21 +8,57 @@ class Game {
   constructor() {
     this.initialize();
     this.generateSequence();
+    this.nextLevel();
   }
 
   initialize() {
     startButton.classList.add("hide");
     this.level = 1;
     this.colors = {
-        blue : blueButton,
-        red : redButton,
-        yellow : yellowButton,
-        green: greenButton,
-    }
+      blue: blueButton,
+      red: redButton,
+      yellow: yellowButton,
+      green: greenButton,
+    };
   }
 
   generateSequence() {
-    this.sequence = new Array(10).fill(0).map( n => Math.floor(Math.random() * 4));
+    this.sequence = new Array(10)
+      .fill(0)
+      .map((n) => Math.floor(Math.random() * 4));
+  }
+
+  nextLevel() {
+    this.turnOnSequence();
+  }
+
+  convertNameToColor(number) {
+    switch (number) {
+      case 0:
+        return "blue";
+      case 1:
+        return "red";
+      case 2:
+        return "yellow";
+      case 3:
+        return "green";
+    }
+  }
+
+  turnOnSequence() {
+    for (let i = 0; i < this.level; i++) {
+        const color = this.convertNameToColor(this.sequence[i]);
+        setTimeout(() => this.turnOnColor(color), 1000 * i);
+    }
+  }
+
+  turnOnColor(color){
+    this.colors[color].classList.add("light");
+    setTimeout(()=> this.turnOffColor(color), 350);
+  }
+
+  turnOffColor(color){
+      this.colors[color].classList.remove("light");
   }
 }
 
