@@ -7,6 +7,7 @@ const LAST_LEVEL = 3;
 
 class Game {
   constructor() {
+    this.initialize = this.initialize.bind(this);
     this.initialize();
     this.generateSequence();
     setTimeout(this.nextLevel(), 500);
@@ -25,7 +26,7 @@ class Game {
   initialize() {
     this.nextLevel = this.nextLevel.bind(this);
     this.chooseColor = this.chooseColor.bind(this);
-    startButton.classList.add("hide");
+    this.toogleStartButton();
     this.level = 1;
     this.colors = {
       blue: blueButton,
@@ -33,6 +34,14 @@ class Game {
       yellow: yellowButton,
       green: greenButton,
     };
+  }
+
+  toogleStartButton() {
+    if (startButton.classList.contains("hide")) {
+      startButton.classList.remove("hide");
+    } else {
+      startButton.classList.add("hide");
+    }
   }
 
   generateSequence() {
@@ -102,6 +111,7 @@ class Game {
     this.colors.yellow.removeEventListener("click", this.chooseColor);
     this.colors.green.removeEventListener("click", this.chooseColor);
   }
+
   chooseColor(ev) {
     const nameColor = ev.target.dataset.color;
     const numberColor = this.convertColorToNumber(nameColor);
@@ -112,14 +122,27 @@ class Game {
         this.level++;
         this.removeClickEvents();
         if (this.level === LAST_LEVEL + 1) {
-          //win
+          this.userWinsTheGame();
         } else {
           setTimeout(this.nextLevel, 1500);
         }
       }
     } else {
-      //lost
+      this.userLosesTheGame();
     }
+  }
+
+  userWinsTheGame() {
+    swal("Good job!", "Congratulations, you won the game!", "success").then(
+      this.initialize
+    );
+  }
+
+  userLosesTheGame() {
+    swal("Oops!", "Better luck next time", "error").then(() => {
+      this.removeClickEvents();
+      this.initialize();
+    });
   }
 }
 
