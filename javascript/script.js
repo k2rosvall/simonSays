@@ -11,7 +11,15 @@ class Game {
     this.nextLevel();
   }
 
+  /*
+    The bind method is used because we want 'this' to still be the object
+    game we created in startGame.
+    If we don't use bind(), the 'this' in the function chooseColor() is 
+    actually the 'div' element in the HTML
+  
+  */
   initialize() {
+    this.chooseColor = this.chooseColor.bind(this);
     startButton.classList.add("hide");
     this.level = 1;
     this.colors = {
@@ -30,6 +38,7 @@ class Game {
 
   nextLevel() {
     this.turnOnSequence();
+    this.addClickEvents();
   }
 
   convertNameToColor(number) {
@@ -47,18 +56,29 @@ class Game {
 
   turnOnSequence() {
     for (let i = 0; i < this.level; i++) {
-        const color = this.convertNameToColor(this.sequence[i]);
-        setTimeout(() => this.turnOnColor(color), 1000 * i);
+      const color = this.convertNameToColor(this.sequence[i]);
+      setTimeout(() => this.turnOnColor(color), 1000 * i);
     }
   }
 
-  turnOnColor(color){
+  turnOnColor(color) {
     this.colors[color].classList.add("light");
-    setTimeout(()=> this.turnOffColor(color), 350);
+    setTimeout(() => this.turnOffColor(color), 350);
   }
 
-  turnOffColor(color){
-      this.colors[color].classList.remove("light");
+  turnOffColor(color) {
+    this.colors[color].classList.remove("light");
+  }
+
+  addClickEvents() {
+    this.colors.blue.addEventListener("click", this.chooseColor);
+    this.colors.red.addEventListener("click", this.chooseColor);
+    this.colors.yellow.addEventListener("click", this.chooseColor);
+    this.colors.green.addEventListener("click", this.chooseColor);
+  }
+
+  chooseColor(ev) {
+    console.log(this);
   }
 }
 
